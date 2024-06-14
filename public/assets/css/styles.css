@@ -1,0 +1,19 @@
+.logo {
+  max-width: 60px;
+}
+
+.shadow {
+  -webkit-box-shadow: 10px 10px 20px 0px rgba(235, 235, 235, 1);
+  -moz-box-shadow: 10px 10px 20px 0px rgba(235, 235, 235, 1);
+  box-shadow: 10px 10px 20px 0px rgba(235, 235, 235, 1);
+}
+
+.shadow-sm {
+  -webkit-box-shadow: 10px 10px 10px 0px rgba(240, 240, 240, 0.5);
+  -moz-box-shadow: 10px 10px 10px 0px rgba(240, 240, 240, 0.5);
+  box-shadow: 10px 10px 10px 0px rgba(240, 240, 240, 0.5);
+}
+
+.remove-bg {
+  mix-blend-mode: multiply !important;
+}
