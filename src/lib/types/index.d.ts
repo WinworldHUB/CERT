@@ -5,6 +5,7 @@ type AppVars = {
   username: string;
   member: unknown;
   selectedMenuIndex: number;
+  agreementNumber: string;
 };
 
 interface AppState {

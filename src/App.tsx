@@ -6,6 +6,7 @@ import { AppContext } from "./lib/context/app.context";
 import LoginPage from "./pages/login";
 import RegisterPage from "./pages/register";
 import UserHomePage from "./pages/user.home";
+import AgreementDetailsPage from "./pages/agreement";
 const App = () => {
   const { appState } = useContext(AppContext);
   return (
@@ -20,6 +21,12 @@ const App = () => {
         <Route
           path={APP_ROUTES.HOME}
           element={!appState.isUserLoggedIn ? <HomePage /> : <LoginPage />}
+        />
+        <Route
+          path={APP_ROUTES.AGREEMENT_DETAILS}
+          element={
+            !appState.isUserLoggedIn ? <AgreementDetailsPage /> : <LoginPage />
+          }
         />
       </Routes>
     </BrowserRouter>

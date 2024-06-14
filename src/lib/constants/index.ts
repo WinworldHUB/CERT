@@ -85,6 +85,7 @@ export enum APP_ROUTES {
   SIGN_IN = "/signin",
   SIGN_UP = "/signup",
   USER_HOME = "/userHome",
+  AGREEMENT_DETAILS = "/agreement",
 }
 
 export const DEFAULT_APP_STATE: AppVars = {
@@ -94,5 +95,8 @@ export const DEFAULT_APP_STATE: AppVars = {
   username: "",
   member: null,
   selectedMenuIndex: 0,
+  agreementNumber: "",
 };
 export const DEFAULT_LOCAL_STORAGE_KEY_FOR_APP_STATE = "ZCGS_LS_APP_STATE";
+
+export const DEFAULT_DATE_FORMAT = "cccc dd, LLL y";
