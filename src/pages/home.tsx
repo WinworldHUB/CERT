@@ -5,16 +5,14 @@ import {
   Button,
   Container,
   Group,
-  NavLink,
   Table,
   Tabs,
-  Text,
   useMantineTheme,
 } from "@mantine/core";
-import { IconChecks, IconLicense, IconPaperclip } from "@tabler/icons-react";
+import { IconChecks, IconLicense } from "@tabler/icons-react";
 import { DateTime } from "luxon";
 import { APP_ROUTES, DEFAULT_DATE_FORMAT } from "../lib/constants";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const TabItems: MenuItem[] = [
   {
