@@ -1,4 +1,4 @@
-import { Grid, TextInput, Text } from "@mantine/core";
+import { Grid, Text } from "@mantine/core";
 import { FC } from "react";
 
 interface FormRowProps {

@@ -1,18 +1,8 @@
-import {
-  Box,
-  Container,
-  Fieldset,
-  Grid,
-  Group,
-  Space,
-  Text,
-  TextInput,
-} from "@mantine/core";
+import { Container, Grid, Space, Text, TextInput } from "@mantine/core";
 import { useContext } from "react";
 import { AppContext } from "../lib/context/app.context";
 import PageLayout from "../lib/components/page.layout";
 import CardSimple from "../lib/components/card.simple";
-import { Form } from "@mantine/form";
 import FormRow from "../lib/components/form.row";
 import ContainerWithTitle from "../lib/components/containerWithTitle";
 
