@@ -26,6 +26,7 @@ type MenuItem = {
 type LoginResponse = {
   success: boolean;
   message: string;
+  pfiId?: string | number;
   fullName: string;
   session_duration: string;
   session_token: string;
