@@ -45,7 +45,7 @@ const PageMenu: FC<PageMenuProps> = ({
       className="shadow-sm"
     >
       <Image
-        src={"/assets/images/zcgs-logo.png"}
+        src={"/assets/images/adminui-logo.png"}
         h={70}
         py={5}
         className="remove-bg"
