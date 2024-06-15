@@ -65,13 +65,43 @@ const AgreementDetailsPage = () => {
                     <Space h={30} />
                   </>
                 </ContainerWithTitle>
+                <ContainerWithTitle title="Primary contact details">
+                  <>
+                    <FormRow title="Name">
+                      <TextInput
+                        placeholder="Full name"
+                        value={"ABC Corp"}
+                        readOnly
+                      />
+                    </FormRow>
+                    <Space h={30} />
+                    <FormRow title="Email">
+                      <TextInput
+                        placeholder="Email address"
+                        value={"ABC Corp"}
+                        readOnly
+                      />
+                    </FormRow>
+                    <Space h={30} />
+                    <FormRow title="Phone">
+                      <TextInput
+                        placeholder="Phone number"
+                        value={"ABC Corp"}
+                        readOnly
+                      />
+                    </FormRow>
+                    <Space h={30} />
+                  </>
+                </ContainerWithTitle>
               </>
             </CardSimple>
           </Grid.Col>
           <Grid.Col span="auto">
-            <CardSimple title="Messages">
-              <Text>{appState.agreementNumber}</Text>
-            </CardSimple>
+            <Container pos="fixed" w="30%">
+              <CardSimple title="Messages">
+                <Text>{appState.agreementNumber}</Text>
+              </CardSimple>
+            </Container>
           </Grid.Col>
         </Grid>
       </Container>
