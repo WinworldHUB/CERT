@@ -9,7 +9,8 @@ export const DEFAULT_POST_API_HEADER = (accessToken: string) => {
     "Content-Type": "application/json",
   };
 };
-export const API_BASE_URL = "https://certbe.onrender.com";
+// export const API_BASE_URL = "https://certbe.onrender.com";
+export const API_BASE_URL = "http://localhost:3000";
 
 export enum API_ROUTES {
   LOGIN = "/users/login",
