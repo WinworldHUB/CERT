@@ -38,7 +38,7 @@ type LoginRequest = {
   password: string;
 };
 
-type SignUpRequest = {
+type RegisterRequest = {
   orgName: string;
   userFullName: string;
   parent_id?: number;
@@ -49,3 +49,15 @@ type SignUpRequest = {
   address: string;
   password: string;
 };
+
+
+type RegisterResponse = {
+  success: boolean;
+  message: string;
+  fullName: string;
+  pfiId: number;
+  session_duration: string;
+  session_token: string;
+  session_jwt: string;
+  error: unknown;
+}

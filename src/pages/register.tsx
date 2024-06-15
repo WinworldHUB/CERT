@@ -14,14 +14,14 @@ import PageLayout from "../lib/components/page.layout";
 import CardSimple from "../lib/components/card.simple";
 import { useForm } from "@mantine/form";
 import useApi from "../lib/hooks/useApi";
-import { useContext, useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import { API_ROUTES } from "../lib/constants/api.constants";
 import { AppContext } from "../lib/context/app.context";
 import { Link } from "react-router-dom";
 import { APP_ROUTES } from "../lib/constants";
 
 const RegisterPage = () => {
-  const { data: loginResponse, postData } = useApi<LoginResponse>();
+  const { data: RegisterResponse, postData } = useApi<RegisterResponse>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { appState, updateAppState } = useContext(AppContext);
   const { colors } = useMantineTheme();
@@ -52,7 +52,7 @@ const RegisterPage = () => {
       phone: (value) =>
         /^(\+260|0)?(?:9[567]|7[567])\d{7}$/.test(value)
           ? null
-          : "Invalid email",
+          : "Invalid phone number",
       password: (value) =>
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=])[^\s].{10,}$/.test(
           value
@@ -64,16 +64,37 @@ const RegisterPage = () => {
     },
   });
 
-  const handleLogin = (request: LoginRequest) => {
+  const handleRegister = (
+    values: {
+      orgName: string;
+      orgAddress: string;
+      phone: string;
+      fullName: string;
+      email: string;
+      password: string;
+      confirmPassword: string;
+    },
+    event: FormEvent<HTMLFormElement>
+  ) => {
+    event.preventDefault();
+    const request: RegisterRequest = {
+      orgName: values.orgName,
+      address: values.orgAddress,
+      userFullName: values.fullName,
+      email: values.email,
+      phone: values.phone,
+      password: values.password,
+    };
     setIsLoading(true);
-    postData(API_ROUTES.LOGIN, request).then((response) => {
+    postData(API_ROUTES.REGSITER, request).then((response) => {
       console.log(response);
       if (response.success) {
         updateAppState({
           ...appState,
           accessToken: response.session_jwt,
           isUserLoggedIn: true,
-          username: request.email,
+          username: values.email,
+          fullName: values.fullName,
         });
       }
       setIsLoading(false);
@@ -85,7 +106,7 @@ const RegisterPage = () => {
       <Container size={"xs"}>
         <CardSimple title="Sign up">
           <Container py={30}>
-            <form onSubmit={signUpForm.onSubmit(handleLogin)}>
+            <form onSubmit={signUpForm.onSubmit(handleRegister)}>
               <TextInput
                 label="Organization name"
                 placeholder="organization name"
@@ -154,11 +175,11 @@ const RegisterPage = () => {
                   Register
                 </Button>
               </Flex>
-              {loginResponse?.error && (
+              {RegisterResponse?.error && (
                 <Group>
                   <Space h={30} />
                   <Text c={"red"}>
-                    {loginResponse?.error?.["error_message"]}
+                    {RegisterResponse?.error?.["error_message"]}
                   </Text>
                 </Group>
               )}
