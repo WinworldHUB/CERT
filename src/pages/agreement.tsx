@@ -1,11 +1,8 @@
 import {
   Container,
   Grid,
-  Group,
-  Image,
   SimpleGrid,
   Space,
-  Stack,
   Text,
   TextInput,
 } from "@mantine/core";

@@ -93,7 +93,7 @@ export const DEFAULT_APP_STATE: AppVars = {
   accessToken: "",
   refreshToken: "",
   username: "",
-  member: null,
+  fullName: "",
   selectedMenuIndex: 0,
   agreementNumber: "",
 };

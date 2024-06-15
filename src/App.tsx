@@ -20,7 +20,7 @@ const App = () => {
         />
         <Route
           path={APP_ROUTES.HOME}
-          element={!appState.isUserLoggedIn ? <HomePage /> : <LoginPage />}
+          element={appState.isUserLoggedIn ? <HomePage /> : <LoginPage />}
         />
         <Route
           path={APP_ROUTES.AGREEMENT_DETAILS}

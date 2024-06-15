@@ -45,6 +45,7 @@ const LoginPage = () => {
           accessToken: response.session_jwt,
           isUserLoggedIn: true,
           username: request.email,
+          fullName: response.fullName,
         });
       }
       setIsLoading(false);

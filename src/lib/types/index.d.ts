@@ -3,7 +3,7 @@ type AppVars = {
   accessToken?: string;
   refreshToken?: string;
   username: string;
-  member: unknown;
+  fullName: string;
   selectedMenuIndex: number;
   agreementNumber: string;
 };
