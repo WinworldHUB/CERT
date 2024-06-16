@@ -12,7 +12,6 @@ export const DEFAULT_POST_API_HEADER = (accessToken: string) => {
 export const DEFAULT_FILE_UPLOAD_API_HEADER = (accessToken: string) => {
   return {
     Authorization: `Bearer ${accessToken}`,
-    "Content-Type": "multipart/form-data",
   };
 };
 export const API_BASE_URL = "https://certbe.onrender.com";
