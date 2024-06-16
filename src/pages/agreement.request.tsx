@@ -37,7 +37,8 @@ const AgreementRequestPage = () => {
                 <FormRow title="Name" isRequired>
                   <TextInput
                     placeholder="Organization name"
-                    value={"ABC Corp"}
+                    key={agreementForm.key("orgName")}
+                    {...agreementForm.getInputProps("orgName")}
                   />
                 </FormRow>
                 <Space h={30} />
