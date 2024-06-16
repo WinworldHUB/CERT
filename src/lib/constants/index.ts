@@ -84,6 +84,7 @@ export enum APP_ROUTES {
   HOME = "/",
   SIGN_IN = "/signin",
   SIGN_UP = "/signup",
+  ADMIN_HOME = "/adminHome",
   USER_HOME = "/userHome",
   AGREEMENT_DETAILS = "/agreement",
 }
@@ -103,6 +104,6 @@ export const DEFAULT_LOCAL_STORAGE_KEY_FOR_APP_STATE = "ZCGS_LS_APP_STATE";
 export const DEFAULT_DATE_FORMAT = "cccc dd, LLL y";
 
 export enum USER_ROLES {
-  ADMIN,
-  USER,
+  ADMIN = "ADMIN",
+  USER = "USER",
 }

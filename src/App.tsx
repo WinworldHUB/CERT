@@ -20,9 +20,10 @@ const App = () => {
           element={appState.isUserLoggedIn ? <UserHomePage /> : <LoginPage />}
         />
         <Route
-          path={APP_ROUTES.HOME}
+          path={APP_ROUTES.ADMIN_HOME}
           element={appState.isUserLoggedIn ? <HomePage /> : <LoginPage />}
         />
+        <Route path={APP_ROUTES.HOME} element={<LoginPage />} />
         <Route
           path={APP_ROUTES.AGREEMENT_DETAILS}
           element={

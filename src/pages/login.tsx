@@ -12,17 +12,28 @@ import PageLayout from "../lib/components/page.layout";
 import CardSimple from "../lib/components/card.simple";
 import { useForm } from "@mantine/form";
 import useApi from "../lib/hooks/useApi";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { API_ROUTES } from "../lib/constants/api.constants";
 import { AppContext } from "../lib/context/app.context";
-import { Link } from "react-router-dom";
-import { APP_ROUTES } from "../lib/constants";
+import { Link, useNavigate } from "react-router-dom";
+import { APP_ROUTES, USER_ROLES } from "../lib/constants";
 
 const LoginPage = () => {
   const { data: loginResponse, postData } = useApi<LoginResponse>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { appState, updateAppState } = useContext(AppContext);
   const [loginError, setLoginError] = useState<string>(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (appState.isUserLoggedIn) {
+      if (appState.role === USER_ROLES.ADMIN.toString()) {
+        navigate(APP_ROUTES.ADMIN_HOME);
+      } else {
+        navigate(APP_ROUTES.USER_HOME);
+      }
+    }
+  }, [appState]);
 
   const loginForm = useForm({
     mode: "uncontrolled",
@@ -51,6 +62,12 @@ const LoginPage = () => {
             role: response.userRole,
           });
           setLoginError(null);
+
+          if (response.userRole === USER_ROLES.ADMIN.toString()) {
+            navigate(APP_ROUTES.ADMIN_HOME);
+          } else {
+            navigate(APP_ROUTES.USER_HOME);
+          }
         } else {
           setLoginError(
             `${response.message} - ${
