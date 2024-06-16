@@ -11,7 +11,7 @@ const ContainerWithTitle: FC<ContainerWithTitleProps> = ({
   children,
 }) => {
   return (
-    <Container py={20}>
+    <Container py={20} fluid>
       <Fieldset legend={title}>{children}</Fieldset>
     </Container>
   );

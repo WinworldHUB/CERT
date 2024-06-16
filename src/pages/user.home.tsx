@@ -52,7 +52,11 @@ const UserHomePage = () => {
 
   return (
     <PageLayout isLoggedIn={appState.isUserLoggedIn}>
-      <CardSimple title="Agreement Requests" buttonTitle="Create Agreement">
+      <CardSimple
+        title="Agreement Requests"
+        buttonTitle="Create Agreement"
+        onButtonClick={() => navigate(APP_ROUTES.CREATE_AGREEMENT)}
+      >
         <Container py={20} fluid>
           <Table striped highlightOnHover withTableBorder>
             <Table.Thead>

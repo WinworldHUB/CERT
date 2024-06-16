@@ -87,6 +87,7 @@ export enum APP_ROUTES {
   ADMIN_HOME = "/adminHome",
   USER_HOME = "/userHome",
   AGREEMENT_DETAILS = "/agreement",
+  CREATE_AGREEMENT = "/createAgreement",
 }
 
 export const DEFAULT_APP_STATE: AppVars = {

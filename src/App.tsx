@@ -7,6 +7,7 @@ import LoginPage from "./pages/login";
 import RegisterPage from "./pages/register";
 import UserHomePage from "./pages/user.home";
 import AgreementDetailsPage from "./pages/agreement";
+import AgreementRequestPage from "./pages/agreement.request";
 const App = () => {
   const { appState } = useContext(AppContext);
 
@@ -28,6 +29,12 @@ const App = () => {
           path={APP_ROUTES.AGREEMENT_DETAILS}
           element={
             appState.isUserLoggedIn ? <AgreementDetailsPage /> : <LoginPage />
+          }
+        />
+        <Route
+          path={APP_ROUTES.CREATE_AGREEMENT}
+          element={
+            appState.isUserLoggedIn ? <AgreementRequestPage /> : <LoginPage />
           }
         />
       </Routes>
