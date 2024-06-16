@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useContext, useEffect, useRef, useState } from "react";
 import PageLayout from "../lib/components/page.layout";
 import { AppContext } from "../lib/context/app.context";
