@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import PageLayout from "../lib/components/page.layout";
 import { AppContext } from "../lib/context/app.context";
 import {
@@ -14,6 +14,8 @@ import { DateTime } from "luxon";
 import { APP_ROUTES, DEFAULT_DATE_FORMAT } from "../lib/constants";
 import { useNavigate } from "react-router-dom";
 import EmptyTableRow from "../lib/components/empty.table.row";
+import useApi from "../lib/hooks/useApi";
+import { API_ROUTES } from "../lib/constants/api.constants";
 
 const TabItems: MenuItem[] = [
   {
@@ -26,17 +28,52 @@ const TabItems: MenuItem[] = [
   },
 ];
 
-const registrationElements = [
-  { orgName: "ABC Corp", orgAddress: "Address 1", fullName: "Clove Clover" },
-];
-
 const HomePage = () => {
   const { colors } = useMantineTheme();
   const { appState, updateAppState } = useContext(AppContext);
+  const [registrationData, setRegistrationData] = useState<User[]>([]);
   const navigate = useNavigate();
+  const { getData: getPFIsWithPrendingRequest } =
+    useApi<PendingRegistrationListResponse>();
+  const [error, setError] = useState<GeneralAPIResponse>(null);
+
+  const { putData: approveRegistrationRequest } = useApi<GeneralAPIResponse>();
+  const timerHandle = useRef(null);
+
+  const getPendingRequests = () => {
+    getPFIsWithPrendingRequest(API_ROUTES.GET_PENDING_REQUESTS)
+      .then((response) => {
+        if (response.success) {
+          console.log(response);
+          setRegistrationData(response.user);
+        }
+        timerHandle.current = null;
+      })
+      .catch(setError);
+  };
+
+  useEffect(() => {
+    //getPendingRequests();
+    if (!timerHandle.current) {
+      timerHandle.current = setInterval(() => {
+        getPendingRequests();
+      }, 5000);
+    }
+  }, []);
 
   const handleRowClick = (rowIndex: number, isAccept: boolean) => {
     console.log(rowIndex, isAccept);
+    if (isAccept) {
+      const request = {
+        userId: registrationData[rowIndex].id,
+        pfiId: registrationData[rowIndex].pfiId,
+      } as ApproveRegistrationRequest;
+      approveRegistrationRequest(API_ROUTES.APPROVE_USER, request).then(
+        (response) => {
+          getPendingRequests();
+        }
+      );
+    }
   };
 
   const handleAgreementClick = (agreementNumber: string) => {
@@ -44,8 +81,8 @@ const HomePage = () => {
     navigate(APP_ROUTES.AGREEMENT_DETAILS);
   };
 
-  const registrationRows = registrationElements.map((element, index) => (
-    <Table.Tr key={element.orgName}>
+  const registrationRows = registrationData.map((element, index) => (
+    <Table.Tr key={element.id}>
       <Table.Td>{element.orgName}</Table.Td>
       <Table.Td>{element.orgAddress}</Table.Td>
       <Table.Td>{element.fullName}</Table.Td>
@@ -104,7 +141,11 @@ const HomePage = () => {
   ));
 
   return (
-    <PageLayout isLoggedIn={appState.isUserLoggedIn}>
+    <PageLayout
+      isLoggedIn={appState.isUserLoggedIn}
+      error={error}
+      onErrorClose={() => setError(null)}
+    >
       <Container fluid>
         <Tabs defaultValue={TabItems[0].title}>
           <Tabs.List>
@@ -130,7 +171,7 @@ const HomePage = () => {
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>
-                {registrationElements.length > 0 ? (
+                {registrationData.length > 0 ? (
                   registrationRows
                 ) : (
                   <EmptyTableRow colSpan={4} />

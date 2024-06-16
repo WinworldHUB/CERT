@@ -1,16 +1,24 @@
-import { AppShell } from "@mantine/core";
+import { AppShell, Modal, Notification } from "@mantine/core";
 import { FC, useContext } from "react";
 import PageMenu from "./page.menu";
 import { AppContext } from "../context/app.context";
 import { APP_ROUTES, DEFAULT_APP_STATE } from "../constants";
 import { useNavigate } from "react-router-dom";
+import { IconX } from "@tabler/icons-react";
 
 interface PageLayoutProps {
   children: JSX.Element;
   isLoggedIn?: boolean;
+  error?: GeneralAPIResponse;
+  onErrorClose?: VoidFunction;
 }
 
-const PageLayout: FC<PageLayoutProps> = ({ children, isLoggedIn }) => {
+const PageLayout: FC<PageLayoutProps> = ({
+  children,
+  isLoggedIn,
+  error,
+  onErrorClose,
+}) => {
   const { appState, updateAppState } = useContext(AppContext);
   const navigate = useNavigate();
 
@@ -31,6 +39,20 @@ const PageLayout: FC<PageLayoutProps> = ({ children, isLoggedIn }) => {
         selectedMenuIndex={appState.selectedMenuIndex}
       />
       <AppShell.Main>{children}</AppShell.Main>
+      <Modal
+        opened={!(error?.success ?? true)}
+        onClose={onErrorClose}
+        title="Error"
+      >
+        <Notification
+          icon={<IconX size={16} />}
+          color="red"
+          title="Your last operation was not successful!"
+          withCloseButton={false}
+        >
+          {error?.message}
+        </Notification>
+      </Modal>
     </AppShell>
   );
 };

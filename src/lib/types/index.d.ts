@@ -63,3 +63,27 @@ type RegisterResponse = {
   session_jwt: string;
   error: unknown;
 };
+
+type User = {
+  id: number;
+  fullName: string;
+  email: string;
+  pfiId: number;
+  orgAddress: string;
+  orgName: string;
+};
+
+type PendingRegistrationListResponse = {
+  success: boolean;
+  user: User[];
+};
+
+interface ApproveRegistrationRequest {
+  userId: number;
+  pfiId: number;
+}
+
+interface GeneralAPIResponse {
+  success: boolean;
+  message: string;
+}
