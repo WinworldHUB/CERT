@@ -13,7 +13,7 @@ export const MenuItems: MenuItem[] = [
     to: APP_ROUTES.HOME,
   },
   {
-    title: "Profile",
+    title: "Logout",
     icon: <IconUser size="1rem" stroke={1.5} />,
   },
   {
