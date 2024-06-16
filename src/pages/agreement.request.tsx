@@ -19,7 +19,9 @@ const AgreementRequestPage = () => {
   const { appState } = useContext(AppContext);
   const [attachments, setAttachments] = useState<File[]>([]);
 
-  const { postData: createAgreement } = useApi<GeneralAPIResponse>();
+  const [loading, setLoading] = useState<boolean>(false);
+  const { postData: createAgreement } = useApi<ActiveAgreementResponse>();
+  const { uploadFile } = useApi<GeneralAPIResponse>();
   const navigate = useNavigate();
   const [error, setError] = useState<GeneralAPIResponse>();
 
@@ -52,6 +54,7 @@ const AgreementRequestPage = () => {
     const validationResponse = agreementForm.validate();
 
     if (!validationResponse.hasErrors) {
+      setLoading(true);
       const formValues = agreementForm.getValues();
       const request: CreateAgreementRequest = {
         pfiId: appState?.pfiId,
@@ -63,7 +66,16 @@ const AgreementRequestPage = () => {
       createAgreement(API_ROUTES.CREATE_AGREEMENT, request)
         .then((response) => {
           if (response.success) {
-            navigate(APP_ROUTES.HOME);
+            uploadFile(
+              `${API_ROUTES.UPLOAD_DOC}/${response.agreement.agreementId}`,
+              attachments
+            )
+              .then((response) => {
+                navigate(APP_ROUTES.HOME);
+              })
+              .catch(setError);
+
+            setLoading(false);
           } else {
             setError(response);
           }
@@ -83,6 +95,7 @@ const AgreementRequestPage = () => {
           title={`Agreement #:${appState?.agreement?.agreementNumber ?? ""}`}
           buttonTitle="Save"
           onButtonClick={handleSubmission}
+          isLoading={loading}
         >
           <>
             <ContainerWithTitle title="Organization details">
@@ -124,12 +137,13 @@ const AgreementRequestPage = () => {
                     minDate={DateTime.now().toJSDate()}
                     key={agreementForm.key("startDate")}
                     {...agreementForm.getInputProps("startDate")}
-                    onChange={(value) =>
+                    onChange={(value) => {
+                      agreementForm.setFieldValue("startDate", value);
                       agreementForm.setFieldValue(
                         "endDate",
                         DateTime.fromJSDate(value).plus({ year: 1 }).toJSDate()
-                      )
-                    }
+                      );
+                    }}
                   />
                 </FormRow>
                 <Space h={30} />

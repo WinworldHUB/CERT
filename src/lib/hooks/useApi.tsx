@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { AppContext } from "../context/app.context";
 import {
   API_BASE_URL,
+  DEFAULT_FILE_UPLOAD_API_HEADER,
   DEFAULT_GET_API_HEADER,
   DEFAULT_POST_API_HEADER,
 } from "../constants/api.constants";
@@ -36,6 +37,13 @@ interface APIState<T> {
    * @returns: Deleted record
    */
   deleteData: (url: string) => Promise<T>;
+  /**
+   * API Upload File Method.
+   * @param url: Url of the endpoint starting with '/'
+   * @param body: File(s) array to be passed for UploadFile Method.
+   * @returns: Added object with additional details like id, etc...
+   */
+  uploadFile: (url: string, body: unknown) => Promise<T>;
 }
 
 const useApi = <T,>(): APIState<T> => {
@@ -132,7 +140,39 @@ const useApi = <T,>(): APIState<T> => {
     }
   };
 
-  return { data, getData, postData, putData, deleteData };
+  /**
+   * API Upload File Method.
+   * @param url: Url of the endpoint starting with '/' and ending with id.
+   *
+   * For example: /api/v1/users/1
+   * @returns: Success/Failure message
+   */
+  const uploadFile = async (url: string, files: File[]) => {
+    try {
+      const formData = new FormData();
+
+      [...files].forEach((file) => {
+        formData.append("files", file, file.name);
+      });
+
+      console.log(formData.keys());
+
+      const response = await fetch(`${API_BASE_URL}${url}`, {
+        method: "POST",
+        headers: DEFAULT_FILE_UPLOAD_API_HEADER(appState.accessToken),
+        body: formData,
+      });
+      const data = await response.json();
+      setData(data);
+
+      return Promise.resolve(data);
+    } catch (error) {
+      console.error(error);
+      Promise.reject(error);
+    }
+  };
+
+  return { data, getData, postData, putData, deleteData, uploadFile };
 };
 
 export default useApi;
