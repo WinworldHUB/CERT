@@ -1,7 +1,7 @@
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
-import { APP_ROUTES, USER_ROLES } from "./lib/constants";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { APP_ROUTES } from "./lib/constants";
 import HomePage from "./pages/home";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { AppContext } from "./lib/context/app.context";
 import LoginPage from "./pages/login";
 import RegisterPage from "./pages/register";
@@ -27,7 +27,7 @@ const App = () => {
         <Route
           path={APP_ROUTES.AGREEMENT_DETAILS}
           element={
-            !appState.isUserLoggedIn ? <AgreementDetailsPage /> : <LoginPage />
+            appState.isUserLoggedIn ? <AgreementDetailsPage /> : <LoginPage />
           }
         />
       </Routes>

@@ -2,7 +2,6 @@ import {
   Button,
   Container,
   Flex,
-  Group,
   PasswordInput,
   Space,
   Text,
@@ -33,7 +32,7 @@ const LoginPage = () => {
         navigate(APP_ROUTES.USER_HOME);
       }
     }
-  }, [appState]);
+  }, [appState, navigate]);
 
   const loginForm = useForm({
     mode: "uncontrolled",

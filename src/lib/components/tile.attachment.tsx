@@ -1,4 +1,5 @@
-import { Group, Image, Text } from "@mantine/core";
+import { Group, Text } from "@mantine/core";
+import { IconFileText } from "@tabler/icons-react";
 import { FC } from "react";
 
 interface AttachmentTileProps {
@@ -8,14 +9,10 @@ interface AttachmentTileProps {
 const AttachmentTile: FC<AttachmentTileProps> = ({ title }) => {
   return (
     <Group justify="center">
-      <Image
-        src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png"
-        height={160}
-        //w={160}
-        alt={title}
-        title={title}
-      />
-      <Text truncate>{title}</Text>
+      <IconFileText color="blue" size={64} />
+      <Text truncate fz={"xs"}>
+        {title}
+      </Text>
     </Group>
   );
 };
