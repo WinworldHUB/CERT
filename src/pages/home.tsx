@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import PageLayout from "../lib/components/page.layout";
 import { AppContext } from "../lib/context/app.context";
 import {
@@ -11,8 +11,9 @@ import {
 } from "@mantine/core";
 import { IconChecks, IconLicense } from "@tabler/icons-react";
 import { DateTime } from "luxon";
-import { APP_ROUTES, DEFAULT_DATE_FORMAT, USER_ROLES } from "../lib/constants";
+import { APP_ROUTES, DEFAULT_DATE_FORMAT } from "../lib/constants";
 import { useNavigate } from "react-router-dom";
+import EmptyTableRow from "../lib/components/empty.table.row";
 
 const TabItems: MenuItem[] = [
   {
@@ -33,15 +34,6 @@ const HomePage = () => {
   const { colors } = useMantineTheme();
   const { appState, updateAppState } = useContext(AppContext);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (
-      appState.isUserLoggedIn &&
-      appState.role === USER_ROLES.USER.toString()
-    ) {
-      navigate(APP_ROUTES.USER_HOME);
-    }
-  }, [appState]);
 
   const handleRowClick = (rowIndex: number, isAccept: boolean) => {
     console.log(rowIndex, isAccept);
@@ -137,7 +129,13 @@ const HomePage = () => {
                   <Table.Th ta="center">Approve Request</Table.Th>
                 </Table.Tr>
               </Table.Thead>
-              <Table.Tbody>{registrationRows}</Table.Tbody>
+              <Table.Tbody>
+                {registrationElements.length > 0 ? (
+                  registrationRows
+                ) : (
+                  <EmptyTableRow colSpan={4} />
+                )}
+              </Table.Tbody>
             </Table>
           </Tabs.Panel>
           <Tabs.Panel value={TabItems[1].title}>
@@ -152,7 +150,13 @@ const HomePage = () => {
                   <Table.Th>Agreement period</Table.Th>
                 </Table.Tr>
               </Table.Thead>
-              <Table.Tbody>{agreementRows}</Table.Tbody>
+              <Table.Tbody>
+                {agreementElements.length > 0 ? (
+                  agreementRows
+                ) : (
+                  <EmptyTableRow colSpan={6} />
+                )}
+              </Table.Tbody>
             </Table>
           </Tabs.Panel>
         </Tabs>
