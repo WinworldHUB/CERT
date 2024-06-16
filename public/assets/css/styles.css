@@ -17,3 +17,7 @@
 .remove-bg {
   mix-blend-mode: multiply !important;
 }
+
+.text-danger {
+  color: var(--mantine-color-red-text) !important;
+}
