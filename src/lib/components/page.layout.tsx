@@ -4,7 +4,24 @@ import PageMenu from "./page.menu";
 import { AppContext } from "../context/app.context";
 import { APP_ROUTES, DEFAULT_APP_STATE } from "../constants";
 import { useNavigate } from "react-router-dom";
-import { IconX } from "@tabler/icons-react";
+import { IconGauge, IconHelp, IconUser, IconX } from "@tabler/icons-react";
+
+export const MenuItems: MenuItem[] = [
+  {
+    title: "Dashboard",
+    icon: <IconGauge size="1rem" stroke={1.5} />,
+    to: APP_ROUTES.HOME,
+  },
+  {
+    title: "Profile",
+    icon: <IconUser size="1rem" stroke={1.5} />,
+  },
+  {
+    title: "Help",
+    icon: <IconHelp size="1rem" stroke={1.5} />,
+    to: APP_ROUTES.HOME,
+  },
+];
 
 interface PageLayoutProps {
   children: JSX.Element;
@@ -25,10 +42,10 @@ const PageLayout: FC<PageLayoutProps> = ({
   const handleMenuClick = (menuIndex: number) => {
     if (menuIndex === 1) {
       updateAppState(DEFAULT_APP_STATE);
-      navigate(APP_ROUTES.HOME);
     } else {
       updateAppState({ ...appState, selectedMenuIndex: menuIndex });
     }
+    navigate(MenuItems[menuIndex].to ?? APP_ROUTES.HOME);
   };
 
   return (

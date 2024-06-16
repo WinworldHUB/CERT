@@ -22,6 +22,7 @@ interface ContextProviderProps {
 type MenuItem = {
   title: string;
   icon: React.ReactElement;
+  to?: string;
 };
 
 type LoginResponse = {

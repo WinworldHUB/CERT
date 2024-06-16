@@ -5,23 +5,8 @@ import {
   SimpleGrid,
   useMantineTheme,
 } from "@mantine/core";
-import { IconGauge, IconUser, IconHelp } from "@tabler/icons-react";
 import { FC } from "react";
-
-export const MenuItems: MenuItem[] = [
-  {
-    title: "Dashboard",
-    icon: <IconGauge size="1rem" stroke={1.5} />,
-  },
-  {
-    title: "Profile",
-    icon: <IconUser size="1rem" stroke={1.5} />,
-  },
-  {
-    title: "Help",
-    icon: <IconHelp size="1rem" stroke={1.5} />,
-  },
-];
+import { MenuItems } from "./page.layout";
 
 interface PageMenuProps {
   selectedMenuIndex: number;
