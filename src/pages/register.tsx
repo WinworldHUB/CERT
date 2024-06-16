@@ -14,16 +14,16 @@ import PageLayout from "../lib/components/page.layout";
 import CardSimple from "../lib/components/card.simple";
 import { useForm } from "@mantine/form";
 import useApi from "../lib/hooks/useApi";
-import { FormEvent, useContext, useState } from "react";
+import { FormEvent, useState } from "react";
 import { API_ROUTES } from "../lib/constants/api.constants";
-import { AppContext } from "../lib/context/app.context";
 import { Link } from "react-router-dom";
 import { APP_ROUTES } from "../lib/constants";
+import RegisterSuccessMessage from "../lib/components/register.success.message";
 
 const RegisterPage = () => {
   const { data: RegisterResponse, postData } = useApi<RegisterResponse>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { appState, updateAppState } = useContext(AppContext);
+  const [isRegistered, setIsRegistered] = useState<boolean>(false);
   const { colors } = useMantineTheme();
 
   const signUpForm = useForm({
@@ -86,105 +86,103 @@ const RegisterPage = () => {
       password: values.password,
     };
     setIsLoading(true);
-    postData(API_ROUTES.REGSITER, request).then((response) => {
+    postData(API_ROUTES.REGISTER, request).then((response) => {
       console.log(response);
       if (response.success) {
-        updateAppState({
-          ...appState,
-          accessToken: response.session_jwt,
-          isUserLoggedIn: true,
-          username: values.email,
-          fullName: values.fullName,
-        });
+        setIsRegistered(response.success);
       }
       setIsLoading(false);
     });
   };
 
   return (
-    <PageLayout isLoggedIn={appState.isUserLoggedIn}>
+    <PageLayout isLoggedIn={false}>
       <Container size={"xs"}>
         <CardSimple title="Sign up">
-          <Container py={30}>
-            <form onSubmit={signUpForm.onSubmit(handleRegister)}>
-              <TextInput
-                label="Organization name"
-                placeholder="organization name"
-                key={signUpForm.key("orgName")}
-                withAsterisk
-                {...signUpForm.getInputProps("orgName")}
-              />
-              <Space h={30} />
-              <TextInput
-                label="Organization address"
-                placeholder="organization address"
-                key={signUpForm.key("orgAddress")}
-                withAsterisk
-                {...signUpForm.getInputProps("orgAddress")}
-              />
-              <Space h={30} />
-              <Fieldset legend="User details" bg={colors.light[0]}>
+          {isRegistered ? (
+            <RegisterSuccessMessage />
+          ) : (
+            <Container py={30}>
+              <form onSubmit={signUpForm.onSubmit(handleRegister)}>
                 <TextInput
-                  label="Full Name"
-                  placeholder="full name"
-                  key={signUpForm.key("fullName")}
+                  label="Organization name"
+                  placeholder="organization name"
+                  key={signUpForm.key("orgName")}
                   withAsterisk
-                  {...signUpForm.getInputProps("fullName")}
+                  {...signUpForm.getInputProps("orgName")}
                 />
                 <Space h={30} />
                 <TextInput
-                  label="Email"
-                  placeholder="Email"
-                  key={signUpForm.key("email")}
+                  label="Organization address"
+                  placeholder="organization address"
+                  key={signUpForm.key("orgAddress")}
                   withAsterisk
-                  {...signUpForm.getInputProps("email")}
+                  {...signUpForm.getInputProps("orgAddress")}
                 />
                 <Space h={30} />
-                <TextInput
-                  label="Phone number"
-                  placeholder="Phone number"
-                  key={signUpForm.key("phone")}
-                  withAsterisk
-                  {...signUpForm.getInputProps("phone")}
-                />
-                <Space h={30} />
-                <PasswordInput
-                  label="Password"
-                  placeholder="password"
-                  key={signUpForm.key("password")}
-                  withAsterisk
-                  {...signUpForm.getInputProps("password")}
-                />
-                <Space h={30} />
-                <PasswordInput
-                  label="Confirm password"
-                  placeholder="confirm password"
-                  key={signUpForm.key("confirmPassword")}
-                  withAsterisk
-                  {...signUpForm.getInputProps("confirmPassword")}
-                />
-              </Fieldset>
-              <Space h={30} />
-              <Flex justify="space-between" align="center">
-                <Text>
-                  Already registered?{" "}
-                  <Link to={APP_ROUTES.SIGN_IN}>Login now</Link>
-                </Text>
-
-                <Button type="submit" loading={isLoading}>
-                  Register
-                </Button>
-              </Flex>
-              {RegisterResponse?.error && (
-                <Group>
+                <Fieldset legend="User details" bg={colors.light[0]}>
+                  <TextInput
+                    label="Full Name"
+                    placeholder="full name"
+                    key={signUpForm.key("fullName")}
+                    withAsterisk
+                    {...signUpForm.getInputProps("fullName")}
+                  />
                   <Space h={30} />
-                  <Text c={"red"}>
-                    {RegisterResponse?.error?.["error_message"]}
+                  <TextInput
+                    label="Email"
+                    placeholder="Email"
+                    key={signUpForm.key("email")}
+                    withAsterisk
+                    {...signUpForm.getInputProps("email")}
+                  />
+                  <Space h={30} />
+                  <TextInput
+                    label="Phone number"
+                    placeholder="Phone number"
+                    key={signUpForm.key("phone")}
+                    withAsterisk
+                    {...signUpForm.getInputProps("phone")}
+                  />
+                  <Space h={30} />
+                  <PasswordInput
+                    label="Password"
+                    placeholder="password"
+                    key={signUpForm.key("password")}
+                    withAsterisk
+                    {...signUpForm.getInputProps("password")}
+                  />
+                  <Space h={30} />
+                  <PasswordInput
+                    label="Confirm password"
+                    placeholder="confirm password"
+                    key={signUpForm.key("confirmPassword")}
+                    withAsterisk
+                    {...signUpForm.getInputProps("confirmPassword")}
+                  />
+                </Fieldset>
+                <Space h={30} />
+                <Flex justify="space-between" align="center">
+                  <Text>
+                    Already registered?{" "}
+                    <Link to={APP_ROUTES.SIGN_IN}>Login now</Link>
                   </Text>
-                </Group>
-              )}
-            </form>
-          </Container>
+
+                  <Button type="submit" loading={isLoading}>
+                    Register
+                  </Button>
+                </Flex>
+                {RegisterResponse?.error && (
+                  <Group>
+                    <Space h={30} />
+                    <Text c={"red"}>
+                      {RegisterResponse?.error?.["error_message"]}
+                    </Text>
+                  </Group>
+                )}
+              </form>
+            </Container>
+          )}
         </CardSimple>
       </Container>
     </PageLayout>

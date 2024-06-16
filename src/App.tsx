@@ -1,7 +1,7 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { APP_ROUTES } from "./lib/constants";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import { APP_ROUTES, USER_ROLES } from "./lib/constants";
 import HomePage from "./pages/home";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AppContext } from "./lib/context/app.context";
 import LoginPage from "./pages/login";
 import RegisterPage from "./pages/register";
@@ -9,6 +9,7 @@ import UserHomePage from "./pages/user.home";
 import AgreementDetailsPage from "./pages/agreement";
 const App = () => {
   const { appState } = useContext(AppContext);
+
   return (
     <BrowserRouter>
       <Routes>

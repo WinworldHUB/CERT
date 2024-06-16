@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import PageLayout from "../lib/components/page.layout";
 import { AppContext } from "../lib/context/app.context";
 import {
@@ -11,7 +11,7 @@ import {
 } from "@mantine/core";
 import { IconChecks, IconLicense } from "@tabler/icons-react";
 import { DateTime } from "luxon";
-import { APP_ROUTES, DEFAULT_DATE_FORMAT } from "../lib/constants";
+import { APP_ROUTES, DEFAULT_DATE_FORMAT, USER_ROLES } from "../lib/constants";
 import { useNavigate } from "react-router-dom";
 
 const TabItems: MenuItem[] = [
@@ -33,6 +33,15 @@ const HomePage = () => {
   const { colors } = useMantineTheme();
   const { appState, updateAppState } = useContext(AppContext);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (
+      appState.isUserLoggedIn &&
+      appState.role === USER_ROLES.USER.toString()
+    ) {
+      navigate(APP_ROUTES.USER_HOME);
+    }
+  }, [appState]);
 
   const handleRowClick = (rowIndex: number, isAccept: boolean) => {
     console.log(rowIndex, isAccept);

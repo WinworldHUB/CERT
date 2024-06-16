@@ -22,6 +22,7 @@ const LoginPage = () => {
   const { data: loginResponse, postData } = useApi<LoginResponse>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { appState, updateAppState } = useContext(AppContext);
+  const [loginError, setLoginError] = useState<string>(null);
 
   const loginForm = useForm({
     mode: "uncontrolled",
@@ -37,19 +38,29 @@ const LoginPage = () => {
 
   const handleLogin = (request: LoginRequest) => {
     setIsLoading(true);
-    postData(API_ROUTES.LOGIN, request).then((response) => {
-      console.log(response);
-      if (response.success) {
-        updateAppState({
-          ...appState,
-          accessToken: response.session_jwt,
-          isUserLoggedIn: true,
-          username: request.email,
-          fullName: response.fullName,
-        });
-      }
-      setIsLoading(false);
-    });
+    postData(API_ROUTES.LOGIN, request)
+      .then((response) => {
+        console.log(response);
+        if (response.success) {
+          updateAppState({
+            ...appState,
+            accessToken: response.session_jwt,
+            isUserLoggedIn: true,
+            username: request.email,
+            fullName: response.fullName,
+            role: response.userRole,
+          });
+          setLoginError(null);
+        } else {
+          setLoginError(
+            `${response.message} - ${
+              loginResponse?.error?.["error_message"] ?? ""
+            }`
+          );
+        }
+        setIsLoading(false);
+      })
+      .catch((error) => setLoginError(error));
   };
 
   return (
@@ -84,13 +95,11 @@ const LoginPage = () => {
                   Login
                 </Button>
               </Flex>
-              {loginResponse?.error && (
-                <Group>
+              {loginError && (
+                <Flex direction={"column"}>
                   <Space h={30} />
-                  <Text c={"red"}>
-                    {loginResponse?.error?.["error_message"]}
-                  </Text>
-                </Group>
+                  <Text c={"red"}>{loginError}</Text>
+                </Flex>
               )}
             </form>
           </Container>

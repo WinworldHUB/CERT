@@ -6,6 +6,7 @@ type AppVars = {
   fullName: string;
   selectedMenuIndex: number;
   agreementNumber: string;
+  role: string;
 };
 
 interface AppState {
@@ -31,6 +32,7 @@ type LoginResponse = {
   session_token: string;
   session_jwt: string;
   error: unknown;
+  userRole: string;
 };
 
 type LoginRequest = {
@@ -50,7 +52,6 @@ type RegisterRequest = {
   password: string;
 };
 
-
 type RegisterResponse = {
   success: boolean;
   message: string;
@@ -60,4 +61,4 @@ type RegisterResponse = {
   session_token: string;
   session_jwt: string;
   error: unknown;
-}
+};
