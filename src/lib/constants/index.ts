@@ -91,14 +91,17 @@ export enum APP_ROUTES {
 }
 
 export const DEFAULT_APP_STATE: AppVars = {
-  isUserLoggedIn: false,
   accessToken: "",
-  refreshToken: "",
-  username: "",
+  agreement: null,
   fullName: "",
-  selectedMenuIndex: 0,
-  agreementNumber: "",
+  isUserLoggedIn: false,
+  orgAddress: "",
+  orgName: "",
+  refreshToken: "",
   role: "",
+  selectedMenuIndex: 0,
+  username: "",
+  pfiId: 0,
 };
 export const DEFAULT_LOCAL_STORAGE_KEY_FOR_APP_STATE = "ZCGS_LS_APP_STATE";
 
@@ -108,3 +111,24 @@ export enum USER_ROLES {
   ADMIN = "ADMIN",
   USER = "USER",
 }
+
+export enum AGREEMENT_STATUS {
+  SUBMITTED = "SUBMITTED",
+  RESPONSE_REQUESTED = "RESPONSE_REQUESTED",
+  PAYMENT_REQUESTED = "PAYMENT_REQUESTED",
+  APPROVED = "APPROVED",
+  REJECTED = "REJECTED",
+}
+
+export const MAX_ALLOWED_ATTACHMENTS = 4;
+
+export const MESSAGES: Message[] = [
+  { message: "Test message 1", from: "Amit", to: 12 },
+  { message: "Test message 2", from: "Amit", to: 12 },
+  { message: "Test message 3", from: "Rishi", to: 12 },
+  { message: "Test message 4", from: "Amit", to: 12 },
+  { message: "Test message 5", from: "Rishi", to: 12 },
+  { message: "Test message 6", from: "Amit", to: 12 },
+  { message: "Test message 7", from: "Rishi", to: 12 },
+  { message: "Test message 8", from: "Amit", to: 12 },
+];

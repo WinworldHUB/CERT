@@ -1,24 +1,36 @@
 import { Container, SimpleGrid, Space, TextInput } from "@mantine/core";
-import { useContext } from "react";
+import { DateInput } from "@mantine/dates";
+import { useContext, useState } from "react";
 import { AppContext } from "../lib/context/app.context";
 import PageLayout from "../lib/components/page.layout";
 import CardSimple from "../lib/components/card.simple";
 import FormRow from "../lib/components/form.row";
 import ContainerWithTitle from "../lib/components/containerWithTitle";
 import AttachmentTile from "../lib/components/tile.attachment";
-import { Form, useForm } from "@mantine/form";
+import { useForm } from "@mantine/form";
+import { DateTime } from "luxon";
+import AddAttachmentTile from "../lib/components/tile.add.attachment";
+import { APP_ROUTES, MAX_ALLOWED_ATTACHMENTS } from "../lib/constants";
+import useApi from "../lib/hooks/useApi";
+import { API_ROUTES } from "../lib/constants/api.constants";
+import { useNavigate } from "react-router-dom";
 
 const AgreementRequestPage = () => {
   const { appState } = useContext(AppContext);
+  const [attachments, setAttachments] = useState<File[]>([]);
+
+  const { postData: createAgreement } = useApi<GeneralAPIResponse>();
+  const navigate = useNavigate();
+  const [error, setError] = useState<GeneralAPIResponse>();
 
   const agreementForm = useForm({
     mode: "uncontrolled",
     initialValues: {
-      orgName: "",
-      orgAddress: "",
-      contactName: "",
-      contactEmail: "",
-      contactPhone: "",
+      orgName: appState.orgName,
+      orgAddress: appState.orgAddress,
+      amount: 0,
+      startDate: DateTime.now().toJSDate(),
+      endDate: DateTime.now().plus({ year: 1 }).toJSDate(),
     },
 
     validate: {
@@ -29,26 +41,46 @@ const AgreementRequestPage = () => {
           ? null
           : "Invalid organization name",
       orgAddress: (value) => (value ? null : "Invalid organization address"),
-      contactName: (value) =>
-        /^[A-Za-z\p{L} .'-]+$/.test(value) ? null : "Invalid name",
-      contactEmail: (value) =>
-        /^\S+@\S+$/.test(value) ? null : "Invalid email",
-      contactPhone: (value) =>
-        /^(\+260|0)?(?:9[567]|7[567])\d{7}$/.test(value)
+      amount: (value) =>
+        /^([1-9][0-9]+|[1-9])$/.test(value.toString())
           ? null
-          : "Invalid phone number",
+          : "Invalid amount",
     },
   });
 
   const handleSubmission = () => {
-    agreementForm.validate();
+    const validationResponse = agreementForm.validate();
+
+    if (!validationResponse.hasErrors) {
+      const formValues = agreementForm.getValues();
+      const request: CreateAgreementRequest = {
+        pfiId: appState?.pfiId,
+        agreementAmount: formValues.amount,
+        commencementDate: formValues.startDate.toISOString(),
+        expiryDate: formValues.endDate.toISOString(),
+        agreementPeriod: "1 year",
+      };
+      createAgreement(API_ROUTES.CREATE_AGREEMENT, request)
+        .then((response) => {
+          if (response.success) {
+            navigate(APP_ROUTES.HOME);
+          } else {
+            setError(response);
+          }
+        })
+        .catch(setError);
+    }
   };
 
   return (
-    <PageLayout isLoggedIn={appState.isUserLoggedIn}>
+    <PageLayout
+      isLoggedIn={appState.isUserLoggedIn}
+      error={error}
+      onErrorClose={() => setError(null)}
+    >
       <Container fluid>
         <CardSimple
-          title={`Agreement #:${appState.agreementNumber}`}
+          title={`Agreement #:${appState?.agreement?.agreementNumber ?? ""}`}
           buttonTitle="Save"
           onButtonClick={handleSubmission}
         >
@@ -60,6 +92,7 @@ const AgreementRequestPage = () => {
                     placeholder="Organization name"
                     key={agreementForm.key("orgName")}
                     {...agreementForm.getInputProps("orgName")}
+                    readOnly
                   />
                 </FormRow>
                 <Space h={30} />
@@ -68,34 +101,44 @@ const AgreementRequestPage = () => {
                     placeholder="Organization address"
                     key={agreementForm.key("orgAddress")}
                     {...agreementForm.getInputProps("orgAddress")}
+                    readOnly
                   />
                 </FormRow>
                 <Space h={30} />
               </>
             </ContainerWithTitle>
-            <ContainerWithTitle title="Primary contact details">
+            <ContainerWithTitle title="Agreement details">
               <>
-                <FormRow title="Name" isRequired>
+                <FormRow title="Amount" isRequired>
                   <TextInput
-                    placeholder="Full name"
-                    key={agreementForm.key("contactName")}
-                    {...agreementForm.getInputProps("contactName")}
+                    type="number"
+                    placeholder="amount"
+                    key={agreementForm.key("amount")}
+                    {...agreementForm.getInputProps("amount")}
                   />
                 </FormRow>
                 <Space h={30} />
-                <FormRow title="Email" isRequired>
-                  <TextInput
-                    placeholder="Email address"
-                    key={agreementForm.key("contactEmail")}
-                    {...agreementForm.getInputProps("contactEmail")}
+                <FormRow title="Commencement Date" isRequired>
+                  <DateInput
+                    placeholder="Commencement date"
+                    minDate={DateTime.now().toJSDate()}
+                    key={agreementForm.key("startDate")}
+                    {...agreementForm.getInputProps("startDate")}
+                    onChange={(value) =>
+                      agreementForm.setFieldValue(
+                        "endDate",
+                        DateTime.fromJSDate(value).plus({ year: 1 }).toJSDate()
+                      )
+                    }
                   />
                 </FormRow>
                 <Space h={30} />
-                <FormRow title="Phone" isRequired>
-                  <TextInput
-                    placeholder="Phone number"
-                    key={agreementForm.key("contactPhone")}
-                    {...agreementForm.getInputProps("contactPhone")}
+                <FormRow title="Expiry Date" isRequired>
+                  <DateInput
+                    placeholder="Expiry date"
+                    key={agreementForm.key("endDate")}
+                    {...agreementForm.getInputProps("endDate")}
+                    readOnly
                   />
                 </FormRow>
                 <Space h={30} />
@@ -103,7 +146,22 @@ const AgreementRequestPage = () => {
             </ContainerWithTitle>
             <ContainerWithTitle title="Attachments">
               <SimpleGrid cols={5}>
-                <AttachmentTile title="Agreement_2024-12-05.pdf" />
+                {attachments.map((attachment, index) => (
+                  <AttachmentTile
+                    title={attachment.name}
+                    onRemove={() =>
+                      setAttachments(
+                        attachments.filter((file, fIndex) => fIndex !== index)
+                      )
+                    }
+                  />
+                ))}
+                {attachments.length < MAX_ALLOWED_ATTACHMENTS && (
+                  <AddAttachmentTile
+                    title="Add attachment"
+                    onChange={(file) => setAttachments([...attachments, file])}
+                  />
+                )}
               </SimpleGrid>
             </ContainerWithTitle>
           </>

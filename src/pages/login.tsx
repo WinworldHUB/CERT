@@ -59,6 +59,9 @@ const LoginPage = () => {
             username: request.email,
             fullName: response.fullName,
             role: response.userRole,
+            orgAddress: response.orgAddress,
+            orgName: response.orgName,
+            pfiId: response.pfiId,
           });
           setLoginError(null);
 

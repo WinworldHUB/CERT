@@ -28,7 +28,7 @@ const CardSimple: FC<CardSimpleProps> = ({
         </Group>
       </Card.Section>
 
-      <Card.Section inheritPadding>{children}</Card.Section>
+      <Card.Section p={0}>{children}</Card.Section>
     </Card>
   );
 };

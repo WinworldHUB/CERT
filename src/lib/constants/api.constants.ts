@@ -10,6 +10,7 @@ export const DEFAULT_POST_API_HEADER = (accessToken: string) => {
   };
 };
 export const API_BASE_URL = "https://certbe.onrender.com";
+//export const API_BASE_URL = "https://certbe-fd1o.onrender.com";
 // export const API_BASE_URL = "http://localhost:3000";
 
 export enum API_ROUTES {
@@ -27,4 +28,6 @@ export enum API_ROUTES {
   GET_PENDING_REQUESTS = "/users/pending",
   GET_DOC_BY_AGREEMENT = "/documents/get-docs", // do a /{agreement_id} to get all docs for an agreement
   UPLOAD_DOC = "/documents/upload-file", // do a /{agreement_id} to upload a docs for an agreement
+  GET_PENDING_AGREEMENTS = "/agreements",
+  GET_AGREEMENT_DETAILS = "/agreements/details",
 }

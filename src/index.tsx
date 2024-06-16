@@ -3,6 +3,7 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { MantineProvider } from "@mantine/core";
 import "@mantine/core/styles.css";
+import "@mantine/dates/styles.css";
 import { APP_THEME } from "./lib/constants";
 import { AppContextProvider } from "./lib/context/app.context";
 

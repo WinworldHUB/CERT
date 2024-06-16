@@ -1,14 +1,3 @@
-type AppVars = {
-  isUserLoggedIn?: boolean;
-  accessToken?: string;
-  refreshToken?: string;
-  username: string;
-  fullName: string;
-  selectedMenuIndex: number;
-  agreementNumber: string;
-  role: string;
-};
-
 interface AppState {
   appState: AppVars;
 
@@ -25,16 +14,21 @@ type MenuItem = {
   to?: string;
 };
 
-type LoginResponse = {
+type GeneralAPIResponse = {
   success: boolean;
   message: string;
-  pfiId?: string | number;
+};
+
+type LoginResponse = GeneralAPIResponse & {
+  pfiId: number;
   fullName: string;
   session_duration: string;
   session_token: string;
   session_jwt: string;
   error: unknown;
   userRole: string;
+  orgAddress: string;
+  orgName: string;
 };
 
 type LoginRequest = {
@@ -54,9 +48,7 @@ type RegisterRequest = {
   password: string;
 };
 
-type RegisterResponse = {
-  success: boolean;
-  message: string;
+type RegisterResponse = GeneralAPIResponse & {
   fullName: string;
   pfiId: number;
   session_duration: string;
@@ -84,7 +76,58 @@ interface ApproveRegistrationRequest {
   pfiId: number;
 }
 
-interface GeneralAPIResponse {
-  success: boolean;
-  message: string;
+type Attachment = {
+  documentId: number;
+  documentName: string;
+  documentUrl: string;
+};
+
+type Agreement = {
+  agreementId: number;
+  agreementNumber: string;
+  pfiId: number;
+  orgName: string;
+  orgAddress: string;
+  agreementAmount: string;
+  commencementDate: string;
+  expiryDate: string;
+  period: string;
+  status: string;
+};
+
+interface CreateAgreementRequest {
+  pfiId: number;
+  agreementAmount: number;
+  commencementDate: string;
+  expiryDate: string;
+  agreementPeriod: string;
 }
+
+type PendingAgreementResponse = GeneralAPIResponse & {
+  agreements: Agreement[];
+};
+
+type ActiveAgreementResponse = GeneralAPIResponse & {
+  agreement: Agreement;
+  documents: Attachment[];
+};
+
+type Message = {
+  message: string;
+  from: string;
+  to: number;
+};
+
+type AppVars = {
+  accessToken?: string;
+  agreement: Agreement;
+  fullName: string;
+  isUserLoggedIn?: boolean;
+  orgAddress: string;
+  orgName: string;
+  refreshToken?: string;
+  role: string;
+  selectedMenuIndex: number;
+  username: string;
+  pfiId: number;
+};
