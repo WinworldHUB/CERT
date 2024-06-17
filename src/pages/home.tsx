@@ -10,7 +10,7 @@ import {
   Tabs,
   useMantineTheme,
 } from "@mantine/core";
-import { IconChecks, IconLicense } from "@tabler/icons-react";
+import { IconBuildingBank, IconChecks, IconLicense } from "@tabler/icons-react";
 import { DateTime } from "luxon";
 import { APP_ROUTES, DEFAULT_DATE_FORMAT } from "../lib/constants";
 import { useNavigate } from "react-router-dom";
@@ -28,14 +28,20 @@ const TabItems: MenuItem[] = [
     title: "Agreements",
     icon: <IconLicense />,
   },
+  {
+    title: "All PFIs",
+    icon: <IconBuildingBank />,
+  },
 ];
 
 const HomePage = () => {
   const { colors } = useMantineTheme();
   const { appState, updateAppState } = useContext(AppContext);
   const [registrationData, setRegistrationData] = useState<User[]>([]);
+  const [pfisData, setPFIsData] = useState<PFI[]>([]);
   const [agreementsData, setAgreementsData] = useState<Agreement[]>([]);
   const navigate = useNavigate();
+  const { getData: getAllPFIData } = useApi<AllPFIResponse>();
   const { getData: getPFIsWithPrendingRequest } =
     useApi<PendingRegistrationListResponse>();
   const { getData: getAllPendingAgreements } =
@@ -69,15 +75,28 @@ const HomePage = () => {
       .catch(setError);
   };
 
+  const getAllPFIs = () => {
+    getAllPFIData(API_ROUTES.GET_ALL_PFI)
+      .then((response) => {
+        if (response.success) {
+          console.log(response);
+          setPFIsData(response.pfis);
+        }
+        timerHandle.current = null;
+      })
+      .catch(setError);
+  };
+
   useEffect(() => {
-    getPendingRequests();
-    getPendingAgreements();
-    // if (!timerHandle.current) {
-    //   timerHandle.current = setInterval(() => {
-    //     getPendingRequests();
-    //     getPendingAgreements();
-    //   }, 5000);
-    // }
+    // getPendingRequests();
+    // getPendingAgreements();
+    if (!timerHandle.current) {
+      timerHandle.current = setInterval(() => {
+        getPendingRequests();
+        getPendingAgreements();
+        getAllPFIs();
+      }, 5000);
+    }
   }, []);
 
   const handleRowClick = (rowIndex: number, isAccept: boolean) => {
@@ -134,6 +153,14 @@ const HomePage = () => {
           </Button>
         </Group>
       </Table.Td>
+    </Table.Tr>
+  ));
+
+  const pfiRows = (pfisData ?? []).map((element, index) => (
+    <Table.Tr key={element.pfiId}>
+      <Table.Td>{element.pfiName}</Table.Td>
+      <Table.Td>{element.pfiAddress}</Table.Td>
+      <Table.Td>{element.isActive ? "Active" : "In-active"}</Table.Td>
     </Table.Tr>
   ));
 
@@ -219,6 +246,20 @@ const HomePage = () => {
                 ) : (
                   <EmptyTableRow colSpan={6} />
                 )}
+              </Table.Tbody>
+            </Table>
+          </Tabs.Panel>
+          <Tabs.Panel value={TabItems[2].title}>
+            <Table striped highlightOnHover withTableBorder>
+              <Table.Thead>
+                <Table.Tr>
+                  <Table.Th>PFI Name</Table.Th>
+                  <Table.Th>PFI Address</Table.Th>
+                  <Table.Th>Status</Table.Th>
+                </Table.Tr>
+              </Table.Thead>
+              <Table.Tbody>
+                {pfisData?.length > 0 ? pfiRows : <EmptyTableRow colSpan={3} />}
               </Table.Tbody>
             </Table>
           </Tabs.Panel>

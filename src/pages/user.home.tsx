@@ -15,7 +15,7 @@ import { DateTime } from "luxon";
 const UserHomePage = () => {
   const { appState, updateAppState } = useContext(AppContext);
   const navigate = useNavigate();
-  const { getData: getActiveAgreement } = useApi<ActiveAgreementResponse>();
+  const { getData: getActiveAgreement } = useApi<AllAgreementResponse>();
   const [agreements, setAgreements] = useState<Agreement[]>([]);
   const timerHandle = useRef(null);
   const [error, setError] = useState<GeneralAPIResponse>(null);
@@ -39,7 +39,7 @@ const UserHomePage = () => {
       .then((response) => {
         if (response.success) {
           console.log(response);
-          setAgreements([response.agreement]);
+          setAgreements(response.agreements);
         }
         timerHandle.current = null;
       })
@@ -47,12 +47,12 @@ const UserHomePage = () => {
   };
 
   useEffect(() => {
-    getAgreements();
-    // if (!timerHandle.current) {
-    //   timerHandle.current = setInterval(() => {
-    //     getAgreements();
-    //   }, 5000);
-    // }
+    //getAgreements();
+    if (!timerHandle.current) {
+      timerHandle.current = setInterval(() => {
+        getAgreements();
+      }, 5000);
+    }
   }, []);
 
   const agreementRows = (agreements ?? []).map((element, index) => (

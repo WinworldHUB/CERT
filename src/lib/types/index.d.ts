@@ -112,6 +112,21 @@ type ActiveAgreementResponse = GeneralAPIResponse & {
   documents: Attachment[];
 };
 
+type AllAgreementResponse = GeneralAPIResponse & {
+  agreements: Agreement[];
+};
+
+type PFI = {
+  pfiId: pfi.id;
+  pfiName: pfi.name;
+  pfiAddress: pfi.address;
+  isActive: pfi.isActive;
+};
+
+type AllPFIResponse = GeneralAPIResponse & {
+  pfis: PFI[];
+};
+
 type Message = {
   message: string;
   from: string;
