@@ -19,7 +19,7 @@ export const MenuItems: MenuItem[] = [
   {
     title: "Help",
     icon: <IconHelp size="1rem" stroke={1.5} />,
-    to: APP_ROUTES.HOME,
+    to: APP_ROUTES.HELP,
   },
 ];
 
